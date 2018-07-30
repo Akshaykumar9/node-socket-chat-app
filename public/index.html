@@ -7,10 +7,6 @@
     <p>Welcome to chat app</p>
     
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket=io(); //io() method is provided by the above library in scipt tag and it is used for initiating connection
-        socket.on('connect', ()=>console.log("Connected to server"));//connect is the inbuilt client event and socket.on works similarly like a io.on on server
-        socket.on('disconnect', ()=>console.log("disconnected from server"))// disconnect is inbuilt event listner and listens only when server is down or stopped
-    </script>
+    <script src="/js/index.js"></script>
 </body>
 </html>

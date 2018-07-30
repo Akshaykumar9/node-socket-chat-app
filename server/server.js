@@ -12,10 +12,19 @@ var io= socketio(server);// making http sever to use the socketio and this means
 
 app.use(express.static(publicpath));
 
-io.on('connection', (socket)=>{
+io.on('connection', function(socket){
     console.log("New user connected")
     
-    socket.on('disconnect', ()=>console.log(`client disconnected`));
+    socket.emit('newMessage', {
+        from:'Anandhisampath@gmail.com',
+        text:'Dont know what to say', 
+        createdAt : new Date().getDate()
+    });// used to create new event
+    
+    socket.on('createMessage', function(createdMessage) {
+        console.log("created message", createdMessage);
+    })
+    socket.on('disconnect', function(){console.log(`client disconnected`)});
     
 }) //io is event listner and connection is a built in event
 
