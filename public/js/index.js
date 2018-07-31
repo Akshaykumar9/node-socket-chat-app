@@ -4,11 +4,11 @@ socket.on('connect', function()
 {
     console.log("Connected to server")
     
-    socket.emit("createMessage", { // we are emitting only if connection is successful so nesting inside connect
+    /*socket.emit("createMessage", { // we are emitting only if connection is successful so nesting inside connect
         from:'akshaykumarb18@gmail.com',
         text:'you are my crush Anandi',
         
-    })
+    })*/
 });//connect is the inbuilt client event and socket.on works similarly like a io.on on server
 
 socket.on('newMessage', function(newMessage) {

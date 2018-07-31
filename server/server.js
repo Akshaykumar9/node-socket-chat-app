@@ -14,15 +14,17 @@ app.use(express.static(publicpath));
 
 io.on('connection', function(socket){
     console.log("New user connected")
-    
+   /* 
     socket.emit('newMessage', {
         from:'Anandhisampath@gmail.com',
         text:'Dont know what to say', 
         createdAt : new Date().getDate()
-    });// used to create new event
+    });// used to create new event*/
     
     socket.on('createMessage', function(createdMessage) {
         console.log("created message", createdMessage);
+        
+        io.emit('newMessage', { from: createdMessage.from, text: createdMessage.text, createdAt: new Date().getTime()});
     })
     socket.on('disconnect', function(){console.log(`client disconnected`)});
     
