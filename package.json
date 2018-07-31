@@ -1,7 +1,7 @@
 {
   "name": "chat-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Real time web apps with socket.io",
   "main": "app.js",
   "scripts": {
     "start": "node server/server.js",
@@ -10,7 +10,7 @@
   "engines": {
     "node": "6.11.2"
   },
-  "author": "",
+  "author": "Akshay Botlaguduru",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
