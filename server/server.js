@@ -6,6 +6,9 @@ console.log(publicpath)// this is recommended*/
 const http= require("http");// it's a built in node module, which is used by express to create web server
 const socketio=require("socket.io");//it is used to create seemless connection between server and client
 const express=require("express");
+
+const {generateMessage} = require("./utils/message")
+
 var app= express();
 var server=http.createServer(app);//explictly mentioning this because we want to create a socketio between server and client
 var io= socketio(server);// making http sever to use the socketio and this means we are ready to accept new connections
@@ -21,15 +24,15 @@ io.on('connection', function(socket){
         createdAt : new Date().getDate()
     });// used to create new event*/
     
-    socket.emit('newMessage', { from: 'Anandi', text : 'Welcome user', createdAt: new Date().getTime()});
-    socket.broadcast.emit('newMessage', { from: 'Anandi', text : 'new user joined', createdAt: new Date().getTime()});
+    socket.emit('newMessage', generateMessage('Anandi', 'Welcome user'));
+    socket.broadcast.emit('newMessage',generateMessage('Anandi','new user joined'));
     
     socket.on('createMessage', function(createdMessage) {
         console.log("created message", createdMessage);
         
         /*io.emit('newMessage', { from: createdMessage.from, text: createdMessage.text, createdAt: new Date().getTime()}); // this is will emit message to all other user including the one who created*/
         
-        socket.broadcast.emit('newMessage', { from: createdMessage.from, text: createdMessage.text, createdAt: new Date().getTime()}); // this will emit message not all other user exclusing the one who created, this is called broadcasting
+        socket.broadcast.emit('newMessage', generateMessage(createdMessage.from, createdMessage.text)); // this will emit message not all other user exclusing the one who created, this is called broadcasting
         
     });
     socket.on('disconnect', function(){console.log(`client disconnected`)});
