@@ -27,12 +27,16 @@ io.on('connection', function(socket){
     socket.emit('newMessage', generateMessage('Anandi', 'Welcome user'));
     socket.broadcast.emit('newMessage',generateMessage('Anandi','new user joined'));
     
-    socket.on('createMessage', function(createdMessage) {
+    socket.on('createMessage', function(createdMessage, callback) {
         console.log("created message", createdMessage);
+        callback('Acknowledged by server');
         
-        /*io.emit('newMessage', { from: createdMessage.from, text: createdMessage.text, createdAt: new Date().getTime()}); // this is will emit message to all other user including the one who created*/
+        io.emit('newMessage', { from: createdMessage.from, text: createdMessage.text, createdAt: new Date().getTime()}); // this is will emit message to all other user including the one who created
         
-        socket.broadcast.emit('newMessage', generateMessage(createdMessage.from, createdMessage.text)); // this will emit message not all other user exclusing the one who created, this is called broadcasting
+        /*socket.broadcast.emit('newMessage', generateMessage(createdMessage.from, createdMessage.text)); // this will emit message nto all other user exclusing the one who created, this is called broadcasting
+        
+*/    
+        
         
     });
     socket.on('disconnect', function(){console.log(`client disconnected`)});
