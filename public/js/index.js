@@ -1,5 +1,25 @@
 var socket= io(); //io() method is provided by the above library in scipt tag and it is used for initiating connection
 
+function scrollToBottom(){
+    //selectors
+    var messages=jQuery("#messages");
+    
+    var newMessage=messages.children('li:last-child');//selects particular tags
+    //heights
+    var clientHeight = messages.prop("clientHeight");
+    var scrollTop= messages.prop("scrollTop");
+    var scrollHeight= messages.prop("scrollHeight");
+    var newMessageheight= newMessage.innerHeight();
+    var lastbeforemessageHeight=newMessage.prev().innerHeight();
+    
+    if(scrollTop+clientHeight+lastbeforemessageHeight+newMessageheight>=scrollHeight){
+       messages.scrollTop(scrollHeight);// this will move to the bottom
+        
+    }
+    
+    
+}
+
 socket.on('connect', function()
 {
     console.log("Connected to server");
@@ -13,17 +33,6 @@ socket.on('connect', function()
   
 });//connect is the inbuilt client event and socket.on works similarly like a io.on on server
 
-var message = (template, newResponse) =>{
-    var formattedTime= moment(newResponse.createdAt).format('h:mm a')
-    var template=jQuery('#'+template).html();
-    return Mustache.render(template, {
-        text: newResponse.text,
-        from: newResponse.from,
-        createdAt:formattedTime
-    })
-    
-    
-}
 
 socket.on('newMessage', function(newMessage) {
     console.log("New Message ",newMessage);
@@ -38,6 +47,7 @@ socket.on('newMessage', function(newMessage) {
     
     jQuery('#messages').append(html);
     
+    scrollToBottom();
     /*var formattedTime= moment(newMessage.createdAt).format('h:mm a');
     var li=jQuery('<li></li>');
     li.text(`${newMessage.from} ${formattedTime}: ${newMessage.text}`);
@@ -58,6 +68,7 @@ socket.on('newLocationMessage', function(newLocationMessage) {
     
     jQuery('#messages').append(html);
     
+    scrollToBottom();
     /*var li=jQuery('<li></li>');
     var a=jQuery('<a target="_blank">My Current Location</a>');
     li.text(`${newLocationMessage.from} ${formattedTime}: `);
