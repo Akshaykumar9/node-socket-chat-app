@@ -2,7 +2,7 @@
   "name": "chat-app",
   "version": "1.0.0",
   "description": "Real time web apps with socket.io",
-  "main": "app.js",
+  "main": "/chat.html",
   "scripts": {
     "start": "node server/server.js",
     "test": "mocha server/**/*.test.js",
