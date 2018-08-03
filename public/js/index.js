@@ -13,25 +13,58 @@ socket.on('connect', function()
   
 });//connect is the inbuilt client event and socket.on works similarly like a io.on on server
 
+var message = (template, newResponse) =>{
+    var formattedTime= moment(newResponse.createdAt).format('h:mm a')
+    var template=jQuery('#'+template).html();
+    return Mustache.render(template, {
+        text: newResponse.text,
+        from: newResponse.from,
+        createdAt:formattedTime
+    })
+    
+    
+}
+
 socket.on('newMessage', function(newMessage) {
     console.log("New Message ",newMessage);
-    var formattedTime= moment(newMessage.createdAt).format('h:mm a');
+   var formattedTime= moment(newMessage.createdAt).format('h:mm a')
+    //var template=jQuery('#message-template').html();
+     var template=jQuery('#message-template').html();
+    
+    var html= Mustache.render(template, {
+        text: newMessage.text,
+        from: newMessage.from,
+        createdAt:formattedTime });
+    
+    jQuery('#messages').append(html);
+    
+    /*var formattedTime= moment(newMessage.createdAt).format('h:mm a');
     var li=jQuery('<li></li>');
     li.text(`${newMessage.from} ${formattedTime}: ${newMessage.text}`);
     jQuery('#messages').append(li);
-    
+    */
 });
 
 socket.on('newLocationMessage', function(newLocationMessage) {
     console.log("NewLocation Message ",newLocationMessage);
     var formattedTime= moment(newLocationMessage.createdAt).format('h:mm a');
-    var li=jQuery('<li></li>');
+    
+     var template=jQuery('#message-template1').html();
+    
+    var html= Mustache.render(template, {
+        url: newLocationMessage.url,
+        from: newLocationMessage.from,
+        createdAt:formattedTime });
+    
+    jQuery('#messages').append(html);
+    
+    /*var li=jQuery('<li></li>');
     var a=jQuery('<a target="_blank">My Current Location</a>');
     li.text(`${newLocationMessage.from} ${formattedTime}: `);
     a.attr('href', newLocationMessage.url);
-    li.append(a);
-    jQuery('#messages').append(li);
+    li.append(a);*/
     
+     
 });
 
 socket.on('disconnect', function()
