@@ -20,9 +20,32 @@ function scrollToBottom(){
     
 }
 
+socket.on('updatedUsersList', function(users) {
+    var ol= jQuery('<ol></ol>');
+    users.forEach(function(user){
+    ol.append(jQuery('<li></li>').text(user))
+    });
+    
+    jQuery('#users').html(ol);
+    
+   
+});
+
 socket.on('connect', function()
 {
     console.log("Connected to server");
+    
+    var params=jQuery.deparam(window.location.search);
+    
+    socket.emit('join', params, function(err){
+        if(err){
+            alert(err);
+            window.location.href="/";
+        }else{
+           console.log("No Error"); 
+        }
+        
+    });//emiting join event from client to server
     
 /*    socket.emit("createMessage", { // we are emitting only if connection is successful so nesting inside connect
         from:'akshaykumarb18@gmail.com',
