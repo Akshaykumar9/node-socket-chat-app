@@ -30,14 +30,10 @@ io.on('connection', function(socket){
     
     
     socket.on('join', function(params, callback) {
-        console.log(typeof params.name);
-        console.log(typeof params.room);
-        var name=Number(params.name);
-        var room = Number(params.room);
-       console.log(isNaN(name));
-       console.log(isNaN(room));
-        
-          if(!isRealString(params.name) || !isRealString(params.room)){
+      var user=users.getUser(socket.id);
+       
+        console.log(!isNaN(Number(params.name)));
+          if(!isRealString(params.name) || !isNaN(Number(params.name))){
             return callback('Name and Room name are required');
         }
     
@@ -62,19 +58,27 @@ io.on('connection', function(socket){
     
     socket.on('createMessage', function(createdMessage, callback) {
         console.log("created message", createdMessage);
-        callback('Acknowledged by server');
         
-        io.emit('newMessage', { from: createdMessage.from, text: createdMessage.text, createdAt: new Date().getTime()}); // this is will emit message to all other user including the one who created
+        var user=users.getUser(socket.id);
+       
+        if(user && isRealString(createdMessage.text)){
+        
+        io.to(user.room).emit('newMessage', generateMessage(user.name, createdMessage.text)); // this is will emit message to all other user including the one who created
         
         /*socket.broadcast.emit('newMessage', generateMessage(createdMessage.from, createdMessage.text)); // this will emit message nto all other user exclusing the one who created, this is called broadcasting
         
 */    
+            }
+ callback('Acknowledged by server');
      });
      
      
      socket.on('createLocationMessage', (coords) => {
          
-         io.emit('newLocationMessage', generateLocationMessage('Anandi', coords.latitude,coords.longitude));
+            var user=users.getUser(socket.id);
+         if(user){
+         io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude,coords.longitude));
+         }
      });
     socket.on('disconnect', function(){
         console.log(`client disconnected`);

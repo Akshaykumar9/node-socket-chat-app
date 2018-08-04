@@ -115,7 +115,7 @@ jQuery('#message-form').on('submit', function(e){
     var messageTextBox= jQuery('[name=message]');
     
      socket.emit("createMessage", { // we are emitting only if connection is successful so nesting inside connect
-        from:'user',
+        
         text: messageTextBox.val()
         
     }, function(data){
