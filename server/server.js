@@ -31,24 +31,25 @@ io.on('connection', function(socket){
     
     socket.on('join', function(params, callback) {
       var user=users.getUser(socket.id);
-       
+      var roomname=params.room.toLowerCase();
+      console.log(roomname)
         console.log(!isNaN(Number(params.name)));
           if(!isRealString(params.name) || !isNaN(Number(params.name))){
             return callback('Name and Room name are required');
         }
     
-        socket.join(params.room); // this method is used for joining a room
+        socket.join(roomname); // this method is used for joining a room
         // scoket.leave() method is used for leaving the room
         
-        //io.to(params.room).emit() will send messages to all users in the room including the one who sent it
-        //socket.braodcast.to(params.room).emitI() // will send messages to all uses excluding the one who sent it
+        //io.to(roomname).emit() will send messages to all users in the room including the one who sent it
+        //socket.braodcast.to(roomname).emitI() // will send messages to all uses excluding the one who sent it
         // socket.emit will send messages to user who joined as usal
         users.removeUser(socket.id); // removing users from other room with same sockt id
-        users.addUser(socket.id, params.name, params.room);//adding user to the room
+        users.addUser(socket.id, params.name, roomname);//adding user to the room
         
-        io.to(params.room).emit('updatedUsersList', users.getUserList(params.room));
-        socket.emit('newMessage', generateMessage('Anandi', 'Welcome user'));
-        socket.broadcast.to(params.room).emit('newMessage',generateMessage('Anandi',`${params.name} has joined the room`));
+        io.to(roomname).emit('updatedUsersList', users.getUserList(roomname));
+        socket.emit('newMessage', generateMessage('Admin', `Welcome ${params.name}`));
+        socket.broadcast.to(roomname).emit('newMessage',generateMessage('Admin',`${params.name} has joined the room`));
         
         
         callback();
@@ -86,13 +87,13 @@ io.on('connection', function(socket){
     console.log('userlist',users.getUserList(user.room));
     if(user){
     io.to(user.room).emit('updatedUsersList', users.getUserList(user.room));
-    io.to(user.room).emit('newMessage',generateMessage('Anandi',`${user.name} has left the conversation`));
+    io.to(user.room).emit('newMessage',generateMessage('Admin',`${user.name} has left the conversation`));
     }
     
     });
         
 }); //io is event listner and connection is a built in event
 
-server.listen(process.env.PORT, process.env.IP, () => console.log(`server started on ${process.env.PORT}`));// we're using server instead of app because we are explicitly creating http server
+server.listen(process.env.PORT || 3000, process.env.IP, () => console.log(`server started on ${process.env.PORT}`));// we're using server instead of app because we are explicitly creating http server
 
 
